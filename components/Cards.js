@@ -20,3 +20,55 @@
 // Add a listener for click events so that when a user clicks on a card, the headline of the article is logged to the console.
 //
 // Use your function to create a card for each of the articles, and append each card to the DOM.
+
+axios
+  .get('https://lambda-times-api.herokuapp.com/articles')
+  .then(({ data }) => {
+    const { articles } = data;
+    const articlesKeys = Object.keys(articles);
+    const cardContainer = document.querySelector('div.cards-container');
+
+    articlesKeys.forEach((key) => {
+      articles[key].forEach((article) =>
+        cardContainer.appendChild(createCard(article))
+      );
+    });
+  });
+
+const createCard = (articleObject) => {
+  const { authorName, authorPhoto, headline } = articleObject;
+  console.log(articleObject);
+
+  // Creates the div.card element
+  const cardElement = document.createElement('div');
+  cardElement.classList.add('card');
+
+  const articleHeadline = document.createElement('div');
+  articleHeadline.innerHTML = headline;
+
+  // The div.author element with it's children
+  const authorElement = document.createElement('div');
+  authorElement.classList.add('author');
+
+  const imageContainer = document.createElement('div');
+  imageContainer.classList.add('img-container');
+
+  const imgElement = document.createElement('img');
+  imgElement.src = authorPhoto;
+  imageContainer.appendChild(imgElement);
+
+  const spanElement = document.createElement('span');
+  spanElement.innerHTML = `By ${authorName}`;
+
+  // An array of the author's children that's going to be appended to the author element
+  const authorElementChildren = [imageContainer, spanElement];
+  authorElementChildren.forEach((child) => authorElement.appendChild(child));
+
+  const cardElementChildren = [articleHeadline, authorElement];
+  cardElementChildren.forEach((child) => cardElement.appendChild(child));
+
+  // Event Listener
+  cardElement.addEventListener('click', () => console.log(headline));
+
+  return cardElement;
+};
