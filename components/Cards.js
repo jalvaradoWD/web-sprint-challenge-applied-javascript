@@ -29,15 +29,18 @@ axios
     const cardContainer = document.querySelector('div.cards-container');
 
     articlesKeys.forEach((key) => {
-      articles[key].forEach((article) =>
-        cardContainer.appendChild(createCard(article))
-      );
+      articles[key].forEach((article) => {
+        const articleCard = createCard(article);
+        // This adds a key that is not seen by the user, but can be used to filter out articles by their topics.
+        articleCard.filteredTag = key;
+
+        cardContainer.appendChild(articleCard);
+      });
     });
   });
 
 const createCard = (articleObject) => {
   const { authorName, authorPhoto, headline } = articleObject;
-  console.log(articleObject);
 
   // Creates the div.card element
   const cardElement = document.createElement('div');
